@@ -3,9 +3,13 @@ const cors = require("cors");
 const { initDB } = require("./db");
 const tasksRouter = require("./routes/tasks");
 const { createClient } = require("redis");
+const client = require("prom-client");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+const collectDefaultMetrics = client.collectDefaultMetrics;
+collectDefaultMetrics({ register: client.register });
 
 const redisClient = createClient({
   url: process.env.REDIS_URL || "redis://redis:6379",
@@ -34,6 +38,15 @@ app.get("/redis-test", async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({ error: "Błąd połączenia z Redis" });
+  }
+});
+
+app.get("/metrics", async (req, res) => {
+  try {
+    res.set("Content-Type", client.register.contentType);
+    res.send(await client.register.metrics());
+  } catch (err) {
+    res.status(500).send("Błąd podczas generowania metryk");
   }
 });
 
