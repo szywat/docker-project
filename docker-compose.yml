@@ -3,9 +3,9 @@ services:
     image: postgres:18-alpine
     container_name: project_db
     environment:
-      - POSTGRES_DB={POSTGRES_DB}
-      - POSTGRES_USER={POSTGRES_USER}
-      - POSTGRES_PASSWORD={POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
       - 5432:5432
     volumes:
@@ -37,13 +37,13 @@ services:
       dockerfile: Dockerfile
     container_name: project_backend
     environment:
-      - DB_HOST={POSTGRES_HOST}
-      - DB_PORT={POSTGRES_PORT}
-      - DB_NAME={POSTGRES_DB}
-      - DB_USER={POSTGRES_USER}
-      - DB_PASSWORD={POSTGRES_PASSWORD}
-      - PORT={BACKEND_PORT}
-      - REDIS_URL={REDIS_URL}
+      - DB_HOST=${POSTGRES_HOST}
+      - DB_PORT=${POSTGRES_PORT}
+      - DB_NAME=${POSTGRES_DB}
+      - DB_USER=${POSTGRES_USER}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - PORT=${BACKEND_PORT}
+      - REDIS_URL=${REDIS_URL}
     networks:
       - project_network
     depends_on:
@@ -52,12 +52,11 @@ services:
       redis:
         condition: service_started
     healthcheck:
-      test: ["CMD-SHELL", "curl -X GET http://localhost:5000/health"]
+      test: ["CMD-SHELL", "wget -qO- http://localhost:5000/health"]
       interval: 5s
       timeout: 5s
       retries: 5
       start_period: 10s
-    restart: unless-stopped
 
   frontend:
     build:
