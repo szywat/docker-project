@@ -12,7 +12,7 @@ export default function Home() {
 
   const postTasks = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/tasks", {
+      const res = await fetch("/api/tasks", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -35,7 +35,7 @@ export default function Home() {
 
   const deleteTask = async (id: number | string) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/tasks/${id}`, {
+      const res = await fetch(`/api/tasks/${id}`, {
         method: "DELETE",
       });
 
@@ -52,7 +52,7 @@ export default function Home() {
 
   const completeTask = async (id: string) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/tasks/${id}`, {
+      const res = await fetch(`/api/tasks/${id}`, {
         method: "PATCH",
       });
 
@@ -84,7 +84,7 @@ export default function Home() {
   useEffect(() => {
     const getTasks = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/tasks");
+        const res = await fetch("/api/tasks");
         if (!res.ok) {
           throw new Error("Nie udało się pobrać zadań");
         }
