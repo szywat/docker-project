@@ -15,8 +15,8 @@ RUN npm run build
 # ETAP 3: PRODUKCJA
 FROM node:20-alpine AS prod
 WORKDIR /app
-ENV NODE_ENV production
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLE=1
 
 RUN addgroup -S app && adduser -S app -G app
 
@@ -28,7 +28,7 @@ COPY --from=build --chown=app:app /app/.next/static ./.next/static
 USER app
 
 EXPOSE 3000
-ENV PORT 3000
-ENV HOSTNAME "0.0.0.0"
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
 
 CMD ["node", "server.js"]
