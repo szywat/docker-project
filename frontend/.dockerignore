@@ -1,0 +1,4 @@
+.next/
+.gitignore
+node_modules/
+next-env.d.ts
