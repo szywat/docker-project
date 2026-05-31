@@ -20,6 +20,10 @@ redisClient.on("connect", () => console.log("Połączono z Redis."));
 
 app.use(cors());
 app.use(express.json());
+app.use((req, res, next) => {
+  req.redis = redisClient;
+  next();
+});
 
 app.use("/api/tasks", tasksRouter);
 
