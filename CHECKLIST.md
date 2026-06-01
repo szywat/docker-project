@@ -1,6 +1,6 @@
 # CHECKLIST - Projekt Kubernetes & CI/CD
 
-[**Link do ostatniego udanego workflow GitHub Actions:**](https://github.com/szywat/docker-project/commit/f13aaa333f9c1436df3c6484413f4ef7494e88bf)
+[**Link do ostatniego udanego workflow GitHub Actions:**](https://github.com/szywat/docker-project/actions/runs/26732218655/workflow)
 
 ---
 
