@@ -56,9 +56,15 @@ spec:
             - name: DB_HOST
               value: "postgres"
             - name: DB_PORT
-              value: "5432"
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: POSTGRES_PORT
             - name: REDIS_URL
-              value: "redis://redis:6379"
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: REDIS_URL
             - name: DB_NAME
               valueFrom:
                 configMapKeyRef:
