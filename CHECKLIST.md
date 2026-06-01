@@ -16,16 +16,10 @@ Projekt jest przystosowany do uruchomienia na lokalnym klastrze wbudowanym w **D
    docker build -t proj-kub-backend:v1 ./backend
    docker build -t proj-kub-frontend:v1 ./frontend
    ```
-3. Aplikacja manifestów w odpowiedniej kolejności:
+3. Aplikacja manifestów z wykorzystaniem **Kustomize**:
 
    ```bash
-   kubectl apply -f k8s/namespace.yaml
-   kubectl apply -f k8s/config/
-   kubectl apply -f k8s/postgres/
-   kubectl apply -f k8s/redis/
-   kubectl apply -f k8s/backend/
-   kubectl apply -f k8s/frontend/
-   kubectl apply -f k8s/ingress/
+   kubectl apply -k k8s/overlays/prod/
    ```
 
 ## 2. Lista zaimplementowanych zasobów Kubernetes
@@ -51,6 +45,7 @@ Wszystkie zasoby znajdują się w dedykowanym namespace `taskmanager`
 - [x] Backend zawiera **initContainer**, który oczekuje na pełną gotowość bazy POstgreSQL.
 - [x] **Zautomatyzowany Pipeline CI/CD**: Workflow Github Actions buduje obrazy, publikuje je na GHCR, uruchamia wirtualny klaster KinD, wdraża manifesty z użyciem `kubectl set image`, testuje Rollout oraz sprawdza status komendą curl.
 - [x] Dodano adnotacje Prometheusa (`prometheus.io/scrape`) wystawiające endpoint `/metrics` na backendzie.
+- [x] Projekt używa **Kustomize** do parametryzacji manifestów i obsługuje środowiska _dev_ oraz _prod_.
 
 ## 4. Komendy testowe i przykładowe wyniki
 

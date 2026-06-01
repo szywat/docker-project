@@ -44,13 +44,7 @@ jobs:
 
       - name: Wdróż infrastrukturę na klaster
         run: |
-          kubectl apply -f k8s/namespace.yaml
-          kubectl apply -f k8s/config/
-          kubectl apply -f k8s/postgres/
-          kubectl apply -f k8s/redis/
-          kubectl apply -f k8s/backend/
-          kubectl apply -f k8s/frontend/
-          kubectl apply -f k8s/ingress/
+          kubectl apply -k k8s/overlays/prod/
 
       - name: Zaktualizuj Pody do nowo zbudowanych obrazów
         run: |
