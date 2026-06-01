@@ -1,0 +1,71 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout kodu
+        uses: actions/checkout@v4
+
+      - name: Zaloguj do GitHub Container Registry (ghcr.io)
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Zbuduj i opublikuj obraz Backendu
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          push: true
+          tags: ghcr.io/${{ github.repository }}/backend:${{ github.sha }}
+
+      - name: Zbuduj i opublikuj obraz Frontendu
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          push: true
+          tags: ghcr.io/${{ github.repository }}/frontend:${{ github.sha }}
+
+      - name: Uruchom tymczasowy klaster KinD (Kubernetes in Docker)
+        uses: helm/kind-action@v1
+        with:
+          cluster_name: test-cluster
+
+      - name: Wdróż infrastrukturę na klaster
+        run: |
+          kubectl apply -f k8s/namespace.yaml
+          kubectl apply -f k8s/config/
+          kubectl apply -f k8s/postgres/
+          kubectl apply -f k8s/redis/
+          kubectl apply -f k8s/backend/
+          kubectl apply -f k8s/frontend/
+          kubectl apply -f k8s/ingress/
+
+      - name: Zaktualizuj Pody do nowo zbudowanych obrazów
+        run: |
+          kubectl set image deployment/backend backend=ghcr.io/${{ github.repository }}/backend:${{ github.sha }} -n taskmanager
+          kubectl set image deployment/frontend frontend=ghcr.io/${{ github.repository }}/frontend:${{ github.sha }} -n taskmanager
+
+      - name: Poczekaj na pełną gotowość całej aplikacji
+        run: |
+          kubectl rollout status statefulset/postgres -n taskmanager --timeout=120s
+          kubectl rollout status deployment/redis -n taskmanager --timeout=120s
+          kubectl rollout status deployment/backend -n taskmanager --timeout=120s
+          kubectl rollout status deployment/frontend -n taskmanager --timeout=120s
+
+      - name: Test HTTP (Sprawdzenie /health)
+        run: |
+          kubectl port-forward service/backend 5000:5000 -n taskmanager &
+          sleep 5
+          curl --fail http://localhost:5000/health
