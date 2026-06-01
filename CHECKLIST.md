@@ -46,7 +46,7 @@ Wszystkie zasoby znajdują się w dedykowanym namespace `taskmanager`
 - [x] Baza danych działa jako **Statefulset** i używa **PVC**.
 - [x] Baza danych i cache **NIE są wystawione na zewnatrz** (korzystają z ClusterIP).
 - [x] Kontenery posiadają **readinessProbe** oraz **livenessProbe** testujące m.in. endpoint `/health`.
-- [x] KOntenery posiadają **resources.requests** oraz **resources.limits**.
+- [x] Kontenery posiadają **resources.requests** oraz **resources.limits**.
 - [x] Główny kontener uruchamia się z obniżonymi uprawnieniami za pomocą **securityContext (runAsNonRoot: true, runAsUser:1000)**.
 - [x] Backend zawiera **initContainer**, który oczekuje na pełną gotowość bazy POstgreSQL.
 - [x] **Zautomatyzowany Pipeline CI/CD**: Workflow Github Actions buduje obrazy, publikuje je na GHCR, uruchamia wirtualny klaster KinD, wdraża manifesty z użyciem `kubectl set image`, testuje Rollout oraz sprawdza status komendą curl.
