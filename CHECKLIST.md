@@ -85,7 +85,7 @@ curl -X POST http://localhost/api/tasks \
 -d '{"title":"Przetestować projekt K8s"}'
 
 # Oczekiwany wynik:
-# {"id": 1, "title": "Przetestować projekt K8s", "completed": false}
+# {"id":1,"title":"Przetestować projekt K8s","done":false,"created_at":"2026-06-01T02:19:24.425Z"}
 ```
 
 **Pobranie zadań (GET)**:
@@ -94,7 +94,7 @@ curl -X POST http://localhost/api/tasks \
 curl http://localhost/api/tasks
 
 # Oczekiwany wynik:
-# [{"id": 1, "title": "Przetestować projekt K8s", "completed": false}]
+# [{"id":1,"title":"Przetestować projekt K8s","done":false,"created_at":"2026-06-01T02:19:24.425Z"}]
 ```
 
 **Test endpointu Healthcheck**:
@@ -103,5 +103,5 @@ curl http://localhost/api/tasks
 curl --fail http://localhost/health
 
 # Oczekiwany wynik:
-# {"status": "ok", "db": "connected", "redis": "connected"}
+# {"status":"ok"}
 ```
